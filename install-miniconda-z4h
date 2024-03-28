@@ -8,7 +8,7 @@ emulate zsh -o err_exit
   local dir="$HOME/.cache/zsh4humans/v5/Farid-NL/miniconda-z4h/miniconda"
   cd -- ${ZSH_SCRIPT:h}
   wget -q -- $url
-  echo "Installing in '$dir'"
-  bash -- $installer -b -p $dir > /dev/null
+  bash -- $installer -b -u -p $dir > /dev/null
+  mv $dir ${ZSH_SCRIPT:h}
   rm -- $installer
 }
