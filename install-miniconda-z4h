@@ -5,8 +5,10 @@ emulate zsh -o err_exit
 () {
   local url='https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh'
   local installer=${url:t}
+  local dir="$HOME/.cache/zsh4humans/v5/Farid-NL/miniconda-z4h/miniconda"
   cd -- ${ZSH_SCRIPT:h}
   wget -q -- $url
-  bash -- $installer -b -p miniconda >/dev/null
+  echo "Installing in '$dir'"
+  bash -- $installer -b -p $dir > /dev/null
   rm -- $installer
 }
