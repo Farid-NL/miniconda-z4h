@@ -3,12 +3,33 @@
 emulate zsh -o err_exit
 
 () {
+  local script_path=${ZSH_SCRIPT:h}
   local url='https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh'
+
+  # Like basename. t<X>, where X is the number of parent directories to keep
   local installer=${url:t}
-  local dir="$HOME/.cache/zsh4humans/v5/Farid-NL/miniconda-z4h/miniconda"
+
+  # Remove regex pattern from plugin path
+  # Example:
+  #   before -> ~/.cache/zsh4humans/v5.new.38085/<github-username>/<github-repo>.new.0YsWAy0D7N/<github-repo>
+  #   after  -> ~/.cache/zsh4humans/v5/<github-username>/<github-repo>/<github-repo>
+  while [[ $script_path =~ "\.new\.\w+" ]]; do
+    script_path=${script_path//$MATCH/}
+  done
+
+  # And goes one directory above
+  # Example
+  #   before -> $Z4H/<github-username>/<github-repo>/<github-repo>
+  #   after  -> $Z4H/<github-username>/<github-repo>
+  local dir=$script_path/..
+
   cd -- ${ZSH_SCRIPT:h}
   wget -q -- $url
-  bash -- $installer -b -u -p $dir > /dev/null
-  mv $dir ${ZSH_SCRIPT:h}
+
+  # Install into $Z4H/<github-username>/<github-repo>/miniconda
+  bash -- $installer -b -u -p $dir/miniconda > /dev/null
+
+  # Cleaning up
+  mv -- $dir/miniconda ${ZSH_SCRIPT:h}
   rm -- $installer
 }
